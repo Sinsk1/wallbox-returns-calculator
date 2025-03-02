@@ -111,9 +111,9 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
   return (
     <div id="results-section" className="space-y-8 animate-fade-in-up">
       <Card className="glass-card overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-wallbox/5 to-wallbox/10 border-b">
+        <CardHeader className="bg-gradient-to-r from-goelektrik/5 to-goelektrik/10 border-b">
           <div className="flex items-center mb-2">
-            <div className="bg-wallbox text-white p-1.5 rounded-md mr-3">
+            <div className="bg-goelektrik text-white p-1.5 rounded-md mr-3">
               <TrendingUp size={20} />
             </div>
             <CardTitle className="text-2xl font-medium text-gray-800">
@@ -127,9 +127,9 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
         
         <CardContent className="pt-6 pb-4">
           <div className="grid md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-wallbox/5 p-4 rounded-lg border border-wallbox/20">
+            <div className="bg-goelektrik/5 p-4 rounded-lg border border-goelektrik/20">
               <div className="flex items-center">
-                <div className="bg-wallbox/10 text-wallbox p-2 rounded-md mr-3">
+                <div className="bg-goelektrik/10 text-goelektrik p-2 rounded-md mr-3">
                   <Euro size={20} />
                 </div>
                 <div>
@@ -141,9 +141,9 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
               </div>
             </div>
             
-            <div className="bg-wallbox/5 p-4 rounded-lg border border-wallbox/20">
+            <div className="bg-goelektrik/5 p-4 rounded-lg border border-goelektrik/20">
               <div className="flex items-center">
-                <div className="bg-wallbox/10 text-wallbox p-2 rounded-md mr-3">
+                <div className="bg-goelektrik/10 text-goelektrik p-2 rounded-md mr-3">
                   <Zap size={20} />
                 </div>
                 <div>
@@ -155,9 +155,9 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
               </div>
             </div>
             
-            <div className="bg-wallbox/5 p-4 rounded-lg border border-wallbox/20">
+            <div className="bg-goelektrik/5 p-4 rounded-lg border border-goelektrik/20">
               <div className="flex items-center">
-                <div className="bg-wallbox/10 text-wallbox p-2 rounded-md mr-3">
+                <div className="bg-goelektrik/10 text-goelektrik p-2 rounded-md mr-3">
                   <TrendingUp size={20} />
                 </div>
                 <div>
@@ -200,34 +200,34 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
                       type="monotone" 
                       dataKey="Heimladen (kumulativ)" 
                       stackId="1" 
-                      stroke="#8884d8" 
-                      fill="#8884d8" 
+                      stroke="#9b87f5" 
+                      fill="#9b87f5" 
                     />
                     <Area 
                       type="monotone" 
                       dataKey="Öffentliches Laden (kumulativ)" 
                       stackId="2" 
-                      stroke="#82ca9d" 
-                      fill="#82ca9d" 
+                      stroke="#7E69AB" 
+                      fill="#7E69AB" 
                     />
                     <Area 
                       type="monotone" 
                       dataKey="Ersparnis (kumulativ)" 
                       stackId="3" 
-                      stroke="#0066cc" 
-                      fill="#0066cc" 
+                      stroke="#8B5CF6" 
+                      fill="#8B5CF6" 
                     />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
               
               <div className="flex flex-col md:flex-row gap-4 pt-2">
-                <div className="flex-1 bg-blue-50 p-4 rounded-lg border border-blue-100">
-                  <h4 className="font-medium text-blue-800 flex items-center">
+                <div className="flex-1 bg-goelektrik-soft p-4 rounded-lg border border-goelektrik-light">
+                  <h4 className="font-medium text-goelektrik-tertiary flex items-center">
                     <InfoIcon size={16} className="mr-2" />
                     Wichtige Erkenntnis
                   </h4>
-                  <p className="text-sm text-blue-700 mt-1">
+                  <p className="text-sm text-goelektrik-secondary mt-1">
                     Nach {results.breakEvenYear.toFixed(1)} Jahren haben Sie die Kosten Ihrer Wallbox-Installation wieder eingespielt und sparen danach {formatCurrency(results.savingsPerYear)} jährlich.
                   </p>
                 </div>
@@ -267,7 +267,7 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {results.yearsData.map((year, index) => (
-                      <tr key={year} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                      <tr key={year} className={index % 2 === 0 ? 'bg-white' : 'bg-goelektrik-soft/30'}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           Jahr {year}
                         </td>
@@ -281,7 +281,7 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
                           {formatCurrency(results.savingsPerYear)}
                         </td>
                         <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${
-                          results.cumulativeSavings[index] < 0 ? 'text-red-600' : 'text-green-600'
+                          results.cumulativeSavings[index] < 0 ? 'text-red-600' : 'text-goelektrik-vivid'
                         }`}>
                           {formatCurrency(results.cumulativeSavings[index])}
                         </td>
@@ -293,7 +293,7 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
               
               <div className="mt-4 text-sm text-gray-600">
                 <p className="flex items-center">
-                  <InfoIcon size={16} className="mr-2 text-blue-600" />
+                  <InfoIcon size={16} className="mr-2 text-goelektrik" />
                   Die Tabelle zeigt Ihre Einsparungen über 10 Jahre, wobei die anfänglichen Kosten der Wallbox-Installation berücksichtigt werden.
                 </p>
               </div>
@@ -311,7 +311,7 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
             <div className="flex flex-col sm:flex-row gap-3">
               <Button 
                 variant="outline" 
-                className="flex-1 flex items-center justify-center border-wallbox text-wallbox hover:bg-wallbox hover:text-white"
+                className="flex-1 flex items-center justify-center border-goelektrik text-goelektrik hover:bg-goelektrik hover:text-white"
                 onClick={handleDownloadPDF}
                 disabled={isGeneratingPDF}
               >
@@ -320,7 +320,7 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
               </Button>
               
               <Button 
-                className="flex-1 flex items-center justify-center bg-wallbox hover:bg-wallbox-dark"
+                className="flex-1 flex items-center justify-center bg-goelektrik hover:bg-goelektrik-secondary"
                 onClick={handleSendEmail}
                 disabled={isSendingEmail}
               >
@@ -330,9 +330,9 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
             </div>
           </div>
           
-          <div className="rounded-lg bg-gradient-to-r from-wallbox-light/20 to-wallbox/20 p-5 border border-wallbox/20">
+          <div className="rounded-lg bg-gradient-to-r from-goelektrik-light/20 to-goelektrik/20 p-5 border border-goelektrik/20">
             <h3 className="font-medium text-gray-800 mb-2 flex items-center">
-              <Zap className="mr-2 text-wallbox" size={18} />
+              <Zap className="mr-2 text-goelektrik" size={18} />
               Handlungsempfehlung
             </h3>
             <p className="text-sm text-gray-700">
@@ -341,26 +341,26 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
             </p>
             <ul className="mt-2 space-y-1 text-sm">
               <li className="flex items-start">
-                <CheckCircle className="mr-2 mt-0.5 text-green-500" size={16} />
+                <CheckCircle className="mr-2 mt-0.5 text-goelektrik" size={16} />
                 <span>Bequemes Laden zu Hause ohne Suche nach öffentlichen Ladestationen</span>
               </li>
               <li className="flex items-start">
-                <CheckCircle className="mr-2 mt-0.5 text-green-500" size={16} />
+                <CheckCircle className="mr-2 mt-0.5 text-goelektrik" size={16} />
                 <span>Schutz Ihres Fahrzeugs vor möglichen Beschädigungen an öffentlichen Ladesäulen</span>
               </li>
               <li className="flex items-start">
-                <CheckCircle className="mr-2 mt-0.5 text-green-500" size={16} />
+                <CheckCircle className="mr-2 mt-0.5 text-goelektrik" size={16} />
                 <span>Staatliche Förderungen, die die Amortisationszeit weiter verkürzen können</span>
               </li>
               <li className="flex items-start">
-                <CheckCircle className="mr-2 mt-0.5 text-green-500" size={16} />
+                <CheckCircle className="mr-2 mt-0.5 text-goelektrik" size={16} />
                 <span>Wertsteigerung Ihrer Immobilie durch zukunftsfähige Ladeinfrastruktur</span>
               </li>
             </ul>
           </div>
         </CardContent>
         
-        <CardFooter className="flex flex-col sm:flex-row items-center justify-between bg-gradient-to-r from-wallbox/5 to-wallbox/10 border-t p-4">
+        <CardFooter className="flex flex-col sm:flex-row items-center justify-between bg-gradient-to-r from-goelektrik/5 to-goelektrik/10 border-t p-4">
           <Button 
             variant="outline" 
             size="sm" 

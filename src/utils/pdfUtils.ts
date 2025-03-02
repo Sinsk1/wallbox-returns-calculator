@@ -30,7 +30,7 @@ export const generatePDF = async (
 
   // Add header and title
   doc.setFontSize(22);
-  doc.setTextColor(0, 102, 204); // Wallbox blue
+  doc.setTextColor(139, 92, 246); // GoElektrik purple
   doc.text('Wallbox ROI Analyse', 105, 20, { align: 'center' });
 
   // Add subtitle
@@ -45,7 +45,7 @@ export const generatePDF = async (
 
   // Add user inputs section
   doc.setFontSize(14);
-  doc.setTextColor(0, 102, 204);
+  doc.setTextColor(139, 92, 246); // GoElektrik purple
   doc.text('Ihre Eingaben:', 20, 50);
 
   doc.setFontSize(11);
@@ -57,7 +57,7 @@ export const generatePDF = async (
 
   // Add key results
   doc.setFontSize(14);
-  doc.setTextColor(0, 102, 204);
+  doc.setTextColor(139, 92, 246); // GoElektrik purple
   doc.text('Wichtigste Ergebnisse:', 20, 95);
 
   // Format results for display
@@ -81,7 +81,7 @@ export const generatePDF = async (
 
   // Add savings table
   doc.setFontSize(14);
-  doc.setTextColor(0, 102, 204);
+  doc.setTextColor(139, 92, 246); // GoElektrik purple
   doc.text('Detaillierte Kosteneinsparungen:', 20, 135);
 
   // Create table data
@@ -95,14 +95,15 @@ export const generatePDF = async (
     ]);
   }
 
-  // @ts-ignore - jspdf-autotable types are not properly detected
+  // Use autoTable for creating the table
+  // @ts-ignore
   doc.autoTable({
     startY: 140,
     head: [['Jahr', 'Kosten Heimladen', 'Kosten öffentliches Laden', 'Kumulative Ersparnis']],
     body: tableData,
     theme: 'grid',
     headStyles: {
-      fillColor: [0, 102, 204],
+      fillColor: [139, 92, 246], // GoElektrik purple
       textColor: [255, 255, 255],
       fontStyle: 'bold',
     },
@@ -115,9 +116,14 @@ export const generatePDF = async (
     },
   });
 
+  // We need to get the Y position after the table
+  // Since lastAutoTable is not properly typed, we need to access it differently
+  // @ts-ignore
+  const finalY = (doc as any).lastAutoTable?.finalY || 200;
+  
   // Add conclusion
   const pageHeight = doc.internal.pageSize.height;
-  let yPosition = doc.lastAutoTable ? doc.lastAutoTable.finalY + 15 : 200;
+  let yPosition = finalY + 15;
   
   // Add a new page if there's not enough space
   if (yPosition > pageHeight - 50) {
@@ -126,7 +132,7 @@ export const generatePDF = async (
   }
 
   doc.setFontSize(14);
-  doc.setTextColor(0, 102, 204);
+  doc.setTextColor(139, 92, 246); // GoElektrik purple
   doc.text('Fazit:', 20, yPosition);
 
   doc.setFontSize(11);
@@ -147,7 +153,7 @@ export const generatePDF = async (
   const footerYPosition = pageHeight - 10;
   doc.setFontSize(8);
   doc.setTextColor(150, 150, 150);
-  doc.text('Wallbox ROI Kalkulator | © ' + new Date().getFullYear(), 105, footerYPosition, { align: 'center' });
+  doc.text('GoElektrik Wallbox ROI Kalkulator | © ' + new Date().getFullYear(), 105, footerYPosition, { align: 'center' });
 
   // Save the PDF
   return doc.output('blob');

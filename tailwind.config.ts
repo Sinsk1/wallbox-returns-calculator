@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -54,12 +53,22 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				wallbox: {
-					DEFAULT: '#0066cc', // Primary Wallbox blue
+					DEFAULT: '#0066cc', // Keep original Wallbox blue
 					light: '#4d94ff',
 					dark: '#004c99',
 					accent: '#ff9500', // Orange accent for highlights
 					success: '#34c759', // Green for positive outcomes
 					overlay: 'rgba(0, 102, 204, 0.05)', // Very light blue overlay
+				},
+				goelektrik: {
+					DEFAULT: '#9b87f5', // Primary GoElektrik purple
+					secondary: '#7E69AB', // Secondary purple
+					tertiary: '#6E59A5', // Tertiary purple
+					dark: '#1A1F2C', // Dark purple
+					light: '#D6BCFA', // Light purple
+					vivid: '#8B5CF6', // Vivid purple
+					soft: '#E5DEFF', // Soft purple
+					neutral: '#8E9196', // Neutral gray
 				}
 			},
 			borderRadius: {

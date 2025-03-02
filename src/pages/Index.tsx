@@ -6,7 +6,7 @@ import { Zap, CarFront, BadgeEuro, Clock } from 'lucide-react';
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-white to-goelektrik-soft/20">
       <div className="container px-4 py-12 mx-auto">
         <header className="text-center max-w-3xl mx-auto mb-12 animate-fade-in">
           <h1 className="text-4xl md:text-5xl font-semibold text-gray-900 mb-4 tracking-tight">
@@ -23,7 +23,7 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12 animate-fade-in-up">
               <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow border">
                 <div className="flex items-start">
-                  <div className="bg-wallbox/10 text-wallbox p-2 rounded-md mr-3">
+                  <div className="bg-goelektrik/10 text-goelektrik p-2 rounded-md mr-3">
                     <Zap size={20} />
                   </div>
                   <div>
@@ -37,7 +37,7 @@ const Index = () => {
               
               <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow border">
                 <div className="flex items-start">
-                  <div className="bg-wallbox/10 text-wallbox p-2 rounded-md mr-3">
+                  <div className="bg-goelektrik/10 text-goelektrik p-2 rounded-md mr-3">
                     <CarFront size={20} />
                   </div>
                   <div>
@@ -51,7 +51,7 @@ const Index = () => {
               
               <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow border">
                 <div className="flex items-start">
-                  <div className="bg-wallbox/10 text-wallbox p-2 rounded-md mr-3">
+                  <div className="bg-goelektrik/10 text-goelektrik p-2 rounded-md mr-3">
                     <BadgeEuro size={20} />
                   </div>
                   <div>
@@ -65,7 +65,7 @@ const Index = () => {
               
               <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow border">
                 <div className="flex items-start">
-                  <div className="bg-wallbox/10 text-wallbox p-2 rounded-md mr-3">
+                  <div className="bg-goelektrik/10 text-goelektrik p-2 rounded-md mr-3">
                     <Clock size={20} />
                   </div>
                   <div>
@@ -83,7 +83,7 @@ const Index = () => {
             </div>
             
             <div className="mt-12 text-center text-sm text-gray-500 animate-fade-in-up">
-              <p>© {new Date().getFullYear()} Wallbox ROI-Rechner | Alle Berechnungen sind Schätzungen basierend auf den eingegebenen Daten.</p>
+              <p>© {new Date().getFullYear()} GoElektrik | Wallbox ROI-Rechner | Alle Berechnungen sind Schätzungen basierend auf den eingegebenen Daten.</p>
             </div>
           </div>
         </div>
