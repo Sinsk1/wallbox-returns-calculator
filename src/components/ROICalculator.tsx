@@ -11,7 +11,7 @@ import { Slider } from '@/components/ui/slider';
 import { Separator } from '@/components/ui/separator';
 import { CalculatorInput, DEFAULT_PARAMS, calculateROI, formatCurrency, formatNumber } from '@/utils/calculationUtils';
 import ROIResults from './ROIResults';
-import { ArrowRight, Zap, CarFront, Euro, Wrench } from 'lucide-react';
+import { ArrowRight, Zap, CarFront, Euro } from 'lucide-react';
 import { toast } from 'sonner';
 
 // Define the form schema
@@ -31,18 +31,11 @@ const formSchema = z.object({
       message: "Maximal 1,00 € pro kWh.",
     }),
   wallboxCost: z.number()
-    .min(500, {
-      message: "Mindestens 500 € für die Installation.",
+    .min(1000, {
+      message: "Mindestens 1.000 € für die Wallbox und Installation.",
     })
-    .max(5000, {
-      message: "Maximal 5.000 € für die Installation.",
-    }),
-  wallboxInstallationCost: z.number()
-    .min(500, {
-      message: "Mindestens 500 € für die Installation.",
-    })
-    .max(5000, {
-      message: "Maximal 5.000 € für die Installation.",
+    .max(6000, {
+      message: "Maximal 6.000 € für die Wallbox und Installation.",
     }),
 });
 
@@ -57,8 +50,7 @@ const ROICalculator: React.FC = () => {
     defaultValues: {
       kmPerYear: DEFAULT_PARAMS.kmPerYear,
       electricityCost: DEFAULT_PARAMS.electricityCost,
-      wallboxCost: DEFAULT_PARAMS.wallboxCost / 2, // Split the cost in half between device and installation
-      wallboxInstallationCost: DEFAULT_PARAMS.wallboxCost / 2,
+      wallboxCost: DEFAULT_PARAMS.wallboxCost,
     },
   });
 
@@ -73,7 +65,7 @@ const ROICalculator: React.FC = () => {
       const calculatorInput: CalculatorInput = {
         kmPerYear: values.kmPerYear,
         electricityCost: values.electricityCost,
-        wallboxCost: values.wallboxCost + values.wallboxInstallationCost, // Add both costs
+        wallboxCost: values.wallboxCost,
       };
       
       const calculationResults = calculateROI(calculatorInput);
@@ -183,15 +175,12 @@ const ROICalculator: React.FC = () => {
                             className="py-4"
                           />
                         </FormControl>
-                        <FormDescription className="text-xs">
-                          Öffentliches Laden kostet durchschnittlich 0,60 €/kWh.
-                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                   
-                  {/* Wallbox cost */}
+                  {/* Combined Wallbox & Installation cost */}
                   <FormField
                     control={form.control}
                     name="wallboxCost"
@@ -200,7 +189,7 @@ const ROICalculator: React.FC = () => {
                         <div className="flex justify-between items-center">
                           <FormLabel className="text-gray-700 flex items-center">
                             <Euro className="mr-2" size={18} />
-                            Kosten der Wallbox
+                            Kosten der Wallbox & Installation
                           </FormLabel>
                           <span className="text-sm font-medium">
                             {field.value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}
@@ -209,40 +198,8 @@ const ROICalculator: React.FC = () => {
                         <FormControl>
                           <Slider
                             defaultValue={[field.value]}
-                            max={3000}
-                            min={500}
-                            step={100}
-                            onValueChange={(vals) => {
-                              field.onChange(vals[0]);
-                            }}
-                            className="py-4"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Wallbox Installation cost */}
-                  <FormField
-                    control={form.control}
-                    name="wallboxInstallationCost"
-                    render={({ field }) => (
-                      <FormItem>
-                        <div className="flex justify-between items-center">
-                          <FormLabel className="text-gray-700 flex items-center">
-                            <Wrench className="mr-2" size={18} />
-                            Kosten der Installation
-                          </FormLabel>
-                          <span className="text-sm font-medium">
-                            {field.value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}
-                          </span>
-                        </div>
-                        <FormControl>
-                          <Slider
-                            defaultValue={[field.value]}
-                            max={3000}
-                            min={500}
+                            max={6000}
+                            min={1000}
                             step={100}
                             onValueChange={(vals) => {
                               field.onChange(vals[0]);
@@ -278,7 +235,7 @@ const ROICalculator: React.FC = () => {
             <CardFooter className="bg-gradient-to-r from-goelektrik/5 to-goelektrik/10 border-t py-4">
               <div className="grid grid-cols-3 gap-4 w-full text-center">
                 <div>
-                  <p className="text-sm font-medium text-gray-800">500+</p>
+                  <p className="text-sm font-medium text-gray-800">2000+</p>
                   <p className="text-xs text-gray-600">zufriedene Kunden</p>
                 </div>
                 <div>
@@ -298,7 +255,7 @@ const ROICalculator: React.FC = () => {
             userInputs={{
               kmPerYear: form.getValues("kmPerYear"),
               electricityCost: form.getValues("electricityCost"),
-              wallboxCost: form.getValues("wallboxCost") + form.getValues("wallboxInstallationCost"),
+              wallboxCost: form.getValues("wallboxCost"),
             }}
             onReset={() => {
               setShowResults(false);
