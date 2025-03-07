@@ -12,7 +12,7 @@ const Index = () => {
       <div className="container px-4 py-12 mx-auto">
         <header className="text-center max-w-3xl mx-auto mb-12 animate-fade-in">
           <h1 className="text-4xl md:text-5xl font-semibold text-gray-900 mb-4 tracking-tight">
-            Wallbox ROI-Rechner
+            Wallbox Rechner
           </h1>
           <p className="text-lg text-gray-600 mb-6">
             Berechnen Sie, wie viel Sie mit Ihrer eigenen Wallbox im Vergleich zum öffentlichen Laden sparen können.
@@ -22,7 +22,7 @@ const Index = () => {
 
         <div className="flex flex-col items-center">
           <div className="w-full max-w-4xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12 animate-fade-in-up">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 animate-fade-in-up">
               <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow border">
                 <div className="flex items-start">
                   <div className="bg-goelektrik/10 text-goelektrik p-2 rounded-md mr-3">
@@ -85,7 +85,7 @@ const Index = () => {
             </div>
             
             <div className="mt-12 text-center text-sm text-gray-500 animate-fade-in-up">
-              <p>© {new Date().getFullYear()} GoElektrik | Wallbox ROI-Rechner | Alle Berechnungen sind Schätzungen basierend auf den eingegebenen Daten.</p>
+              <p>© {new Date().getFullYear()} GoElektrik | Wallbox Rechner | Alle Berechnungen sind Schätzungen basierend auf den eingegebenen Daten.</p>
             </div>
           </div>
         </div>

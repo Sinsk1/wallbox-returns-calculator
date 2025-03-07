@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,7 @@ import {
   formatNumber 
 } from '@/utils/calculationUtils';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
-import { RefreshCcw, Zap, CheckCircle, InfoIcon, TrendingUp, Euro, Printer } from 'lucide-react';
+import { RefreshCcw, Zap, CheckCircle, InfoIcon, TrendingUp, Euro, Printer, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ROIResultsProps {
@@ -30,7 +29,6 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
   const [chartData, setChartData] = useState<any[]>([]);
   const [animateChart, setAnimateChart] = useState(false);
 
-  // Prepare chart data
   useEffect(() => {
     const data = results.yearsData.map((year, index) => ({
       name: `Jahr ${year}`,
@@ -41,13 +39,11 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
     
     setChartData(data);
     
-    // Trigger animation after a short delay
     setTimeout(() => {
       setAnimateChart(true);
     }, 300);
   }, [results]);
 
-  // Handle printing
   const handlePrint = () => {
     window.print();
     toast.success("Druckvorgang gestartet", {
@@ -55,7 +51,6 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
     });
   };
 
-  // Custom tooltip for charts
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
@@ -288,7 +283,7 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
               Möchten Sie Ihre persönliche Analyse ausdrucken und mit nach Hause nehmen? Nutzen Sie die untenstehende Option:
             </p>
             
-            <div className="flex justify-center">
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button 
                 variant="outline" 
                 className="flex items-center justify-center border-goelektrik text-goelektrik hover:bg-goelektrik hover:text-white"
@@ -296,6 +291,14 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
               >
                 <Printer className="mr-2" size={18} />
                 Analyse drucken
+              </Button>
+              
+              <Button 
+                className="flex items-center justify-center bg-goelektrik text-white hover:bg-goelektrik-dark"
+                onClick={() => window.open('https://www.goelektrik.de/', '_blank')}
+              >
+                <ExternalLink className="mr-2" size={18} />
+                Jetzt Wallbox installieren
               </Button>
             </div>
           </div>
