@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -295,7 +296,7 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
               
               <Button 
                 className="flex items-center justify-center bg-goelektrik text-white hover:bg-goelektrik-dark"
-                onClick={() => window.open('https://www.goelektrik.de/', '_blank')}
+                onClick={() => window.open('https://www.goelektrik.de/?utm_source=rechner&utm_medium=website&utm_campaign=wallbox', '_blank')}
               >
                 <ExternalLink className="mr-2" size={18} />
                 Jetzt Wallbox installieren
