@@ -3,10 +3,12 @@ import React from 'react';
 import ROICalculator from '@/components/ROICalculator';
 import { Separator } from '@/components/ui/separator';
 import { Zap, CarFront, BadgeEuro, Clock } from 'lucide-react';
+import Header from '@/components/Header';
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-goelektrik-soft/20">
+      <Header />
       <div className="container px-4 py-12 mx-auto">
         <header className="text-center max-w-3xl mx-auto mb-12 animate-fade-in">
           <h1 className="text-4xl md:text-5xl font-semibold text-gray-900 mb-4 tracking-tight">
