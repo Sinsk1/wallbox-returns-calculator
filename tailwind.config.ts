@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,13 +62,13 @@ export default {
 					overlay: 'rgba(0, 102, 204, 0.05)', // Very light blue overlay
 				},
 				goelektrik: {
-					DEFAULT: '#9b87f5', // Primary GoElektrik purple
-					secondary: '#7E69AB', // Secondary purple
-					tertiary: '#6E59A5', // Tertiary purple
-					dark: '#1A1F2C', // Dark purple
-					light: '#D6BCFA', // Light purple
-					vivid: '#8B5CF6', // Vivid purple
-					soft: '#E5DEFF', // Soft purple
+					DEFAULT: '#0c585e', // Updated GoElektrik main color
+					secondary: '#0a4a4f', // Secondary color
+					tertiary: '#084245', // Tertiary color
+					dark: '#063639', // Dark color
+					light: '#11797f', // Light color
+					vivid: '#15989f', // Vivid color
+					soft: '#e6f0f0', // Soft color
 					neutral: '#8E9196', // Neutral gray
 				}
 			},

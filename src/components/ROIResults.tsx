@@ -11,15 +11,13 @@ import {
   formatPercentage, 
   formatNumber 
 } from '@/utils/calculationUtils';
-import { generatePDF, sendPDFViaEmail, downloadPDF } from '@/utils/pdfUtils';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, ReferenceLine } from 'recharts';
-import { Download, Mail, RefreshCcw, Zap, CheckCircle, InfoIcon, TrendingUp, Euro } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { RefreshCcw, Zap, CheckCircle, InfoIcon, TrendingUp, Euro, Printer } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ROIResultsProps {
   results: CalculatorResult;
   userInputs: {
-    email: string;
     kmPerYear: number;
     electricityCost: number;
     wallboxCost: number;
@@ -28,8 +26,6 @@ interface ROIResultsProps {
 }
 
 const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset }) => {
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
-  const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [activeTab, setActiveTab] = useState('chart');
   const [chartData, setChartData] = useState<any[]>([]);
   const [animateChart, setAnimateChart] = useState(false);
@@ -51,42 +47,12 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
     }, 300);
   }, [results]);
 
-  // Handle PDF download
-  const handleDownloadPDF = async () => {
-    setIsGeneratingPDF(true);
-    
-    try {
-      const pdfBlob = await generatePDF(results, userInputs);
-      downloadPDF(pdfBlob, 'wallbox-roi-analyse.pdf');
-      
-      toast.success("PDF-Download erfolgreich", {
-        description: "Ihre ROI-Analyse wurde heruntergeladen."
-      });
-    } catch (error) {
-      console.error("PDF generation error:", error);
-      toast.error("Fehler beim Generieren des PDFs", {
-        description: "Bitte versuchen Sie es erneut."
-      });
-    } finally {
-      setIsGeneratingPDF(false);
-    }
-  };
-
-  // Handle email sending
-  const handleSendEmail = async () => {
-    setIsSendingEmail(true);
-    
-    try {
-      const pdfBlob = await generatePDF(results, userInputs);
-      await sendPDFViaEmail(userInputs.email, pdfBlob);
-    } catch (error) {
-      console.error("Email error:", error);
-      toast.error("Fehler beim Versenden der E-Mail", {
-        description: "Bitte versuchen Sie es später erneut."
-      });
-    } finally {
-      setIsSendingEmail(false);
-    }
+  // Handle printing
+  const handlePrint = () => {
+    window.print();
+    toast.success("Druckvorgang gestartet", {
+      description: "Die Seite wird zum Drucken vorbereitet."
+    });
   };
 
   // Custom tooltip for charts
@@ -126,7 +92,7 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
         </CardHeader>
         
         <CardContent className="pt-6 pb-4">
-          <div className="grid md:grid-cols-3 gap-4 mb-8">
+          <div className="grid md:grid-cols-4 gap-4 mb-8">
             <div className="bg-goelektrik/5 p-4 rounded-lg border border-goelektrik/20">
               <div className="flex items-center">
                 <div className="bg-goelektrik/10 text-goelektrik p-2 rounded-md mr-3">
@@ -136,6 +102,20 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
                   <p className="text-sm text-gray-600">Jährliche Ersparnis</p>
                   <p className="text-xl font-semibold text-gray-800">
                     {formatCurrency(results.savingsPerYear)}
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-goelektrik/5 p-4 rounded-lg border border-goelektrik/20">
+              <div className="flex items-center">
+                <div className="bg-goelektrik/10 text-goelektrik p-2 rounded-md mr-3">
+                  <Euro size={20} />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Monatliche Ersparnis</p>
+                  <p className="text-xl font-semibold text-gray-800">
+                    {formatCurrency(results.savingsPerMonth)}
                   </p>
                 </div>
               </div>
@@ -200,22 +180,22 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
                       type="monotone" 
                       dataKey="Heimladen (kumulativ)" 
                       stackId="1" 
-                      stroke="#9b87f5" 
-                      fill="#9b87f5" 
+                      stroke="#0c585e" 
+                      fill="#0c585e" 
                     />
                     <Area 
                       type="monotone" 
                       dataKey="Öffentliches Laden (kumulativ)" 
                       stackId="2" 
-                      stroke="#7E69AB" 
-                      fill="#7E69AB" 
+                      stroke="#084245" 
+                      fill="#084245" 
                     />
                     <Area 
                       type="monotone" 
                       dataKey="Ersparnis (kumulativ)" 
                       stackId="3" 
-                      stroke="#8B5CF6" 
-                      fill="#8B5CF6" 
+                      stroke="#15989f" 
+                      fill="#15989f" 
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -228,7 +208,7 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
                     Wichtige Erkenntnis
                   </h4>
                   <p className="text-sm text-goelektrik-secondary mt-1">
-                    Nach {results.breakEvenYear.toFixed(1)} Jahren haben Sie die Kosten Ihrer Wallbox-Installation wieder eingespielt und sparen danach {formatCurrency(results.savingsPerYear)} jährlich.
+                    Nach {results.breakEvenYear.toFixed(1)} Jahren haben Sie die Kosten Ihrer Wallbox-Installation wieder eingespielt und sparen danach {formatCurrency(results.savingsPerYear)} jährlich ({formatCurrency(results.savingsPerMonth)} monatlich).
                   </p>
                 </div>
                 <div className="flex-1 bg-green-50 p-4 rounded-lg border border-green-100">
@@ -305,27 +285,17 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
           <div className="bg-gray-50 p-4 rounded-lg border mb-4">
             <h3 className="font-medium text-gray-800 mb-2">Nicht verpassen: Sichern Sie sich diese Einsparungen</h3>
             <p className="text-sm text-gray-600 mb-4">
-              Möchten Sie Ihre persönliche Analyse als PDF erhalten oder per E-Mail teilen? Nutzen Sie die untenstehenden Optionen:
+              Möchten Sie Ihre persönliche Analyse ausdrucken und mit nach Hause nehmen? Nutzen Sie die untenstehende Option:
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex justify-center">
               <Button 
                 variant="outline" 
-                className="flex-1 flex items-center justify-center border-goelektrik text-goelektrik hover:bg-goelektrik hover:text-white"
-                onClick={handleDownloadPDF}
-                disabled={isGeneratingPDF}
+                className="flex items-center justify-center border-goelektrik text-goelektrik hover:bg-goelektrik hover:text-white"
+                onClick={handlePrint}
               >
-                <Download className="mr-2" size={18} />
-                {isGeneratingPDF ? "Wird generiert..." : "PDF herunterladen"}
-              </Button>
-              
-              <Button 
-                className="flex-1 flex items-center justify-center bg-goelektrik hover:bg-goelektrik-secondary"
-                onClick={handleSendEmail}
-                disabled={isSendingEmail}
-              >
-                <Mail className="mr-2" size={18} />
-                {isSendingEmail ? "Wird gesendet..." : "Als E-Mail senden"}
+                <Printer className="mr-2" size={18} />
+                Analyse drucken
               </Button>
             </div>
           </div>
@@ -337,7 +307,7 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
             </h3>
             <p className="text-sm text-gray-700">
               Basierend auf Ihrer Analyse empfehlen wir dringend die Installation einer Wallbox. 
-              Sie sparen nicht nur {formatCurrency(results.savingsPerYear)} jährlich, sondern profitieren auch von:
+              Sie sparen nicht nur {formatCurrency(results.savingsPerYear)} jährlich ({formatCurrency(results.savingsPerMonth)} monatlich), sondern profitieren auch von:
             </p>
             <ul className="mt-2 space-y-1 text-sm">
               <li className="flex items-start">
@@ -384,7 +354,7 @@ const ROIResults: React.FC<ROIResultsProps> = ({ results, userInputs, onReset })
                 <p className="text-xs text-gray-600">Die Berechnung basiert auf einem Vergleich zwischen Heimladen und öffentlichem Laden mit folgenden Annahmen:</p>
                 <ul className="text-xs text-gray-600 list-disc pl-4 space-y-1">
                   <li>Verbrauch von 0,2 kWh/km (durchschnittlicher EV-Verbrauch)</li>
-                  <li>Öffentliches Laden ist 2,5-mal teurer als Heimladen</li>
+                  <li>Öffentliches Laden kostet 0,60 €/kWh</li>
                   <li>Lebensdauer der Wallbox: 10+ Jahre</li>
                   <li>Keine Berücksichtigung von Inflation oder Strompreissteigerungen</li>
                 </ul>

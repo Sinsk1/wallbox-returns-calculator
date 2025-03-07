@@ -2,27 +2,27 @@
 // Electricity consumption for electric vehicles per km in kWh
 const CONSUMPTION_PER_KM = 0.2; // kWh/km (average EV consumption)
 
-// Public charging markup factor compared to home electricity
-const PUBLIC_CHARGING_MARKUP = 2.5; // Public charging is often 2-3x more expensive
+// Public charging price (fixed at 0.60€ per kWh)
+const PUBLIC_CHARGING_PRICE = 0.60; // €/kWh for public charging
 
 // Initial installation cost for different Wallbox types
 export const WALLBOX_INSTALLATION_COSTS = {
   basic: 800, // Basic Wallbox installation
   smart: 1200, // Smart Wallbox with app control
   premium: 1800, // Premium Wallbox with advanced features
+  complete: 2200, // Complete Wallbox installation (new default)
 };
 
 // Default calculation parameters
 export const DEFAULT_PARAMS = {
   kmPerYear: 15000,
   electricityCost: 0.30, // €/kWh
-  wallboxCost: WALLBOX_INSTALLATION_COSTS.smart,
+  wallboxCost: WALLBOX_INSTALLATION_COSTS.complete, // Updated to the new default
   yearsOfUse: 10,
 };
 
 // Interface for calculator input
 export interface CalculatorInput {
-  email: string;
   kmPerYear: number;
   electricityCost: number; // in € per kWh
   wallboxCost: number; // in €
@@ -32,6 +32,7 @@ export interface CalculatorInput {
 // Interface for calculator results
 export interface CalculatorResult {
   savingsPerYear: number;
+  savingsPerMonth: number; // Added monthly savings
   breakEvenYear: number;
   totalSavings: number;
   homeCosts: number[];
@@ -58,11 +59,13 @@ export const calculateROI = (input: CalculatorInput): CalculatorResult => {
   const homeCostPerYear = annualConsumption * electricityCost;
   
   // Calculate annual cost for public charging
-  const publicChargingRate = electricityCost * PUBLIC_CHARGING_MARKUP;
-  const publicCostPerYear = annualConsumption * publicChargingRate;
+  const publicCostPerYear = annualConsumption * PUBLIC_CHARGING_PRICE;
   
   // Calculate annual savings
   const savingsPerYear = publicCostPerYear - homeCostPerYear;
+  
+  // Calculate monthly savings
+  const savingsPerMonth = savingsPerYear / 12;
   
   // Calculate break-even point (in years)
   const breakEvenYear = wallboxCost / savingsPerYear;
@@ -89,6 +92,7 @@ export const calculateROI = (input: CalculatorInput): CalculatorResult => {
   
   return {
     savingsPerYear,
+    savingsPerMonth,
     breakEvenYear,
     totalSavings,
     homeCosts,

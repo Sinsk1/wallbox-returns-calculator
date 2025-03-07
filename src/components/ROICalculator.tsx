@@ -11,14 +11,11 @@ import { Slider } from '@/components/ui/slider';
 import { Separator } from '@/components/ui/separator';
 import { CalculatorInput, DEFAULT_PARAMS, calculateROI, formatCurrency, formatNumber } from '@/utils/calculationUtils';
 import ROIResults from './ROIResults';
-import { ArrowRight, Zap, CarFront, Euro, Timer } from 'lucide-react';
+import { ArrowRight, Zap, CarFront, Euro, Wrench } from 'lucide-react';
 import { toast } from 'sonner';
 
 // Define the form schema
 const formSchema = z.object({
-  email: z.string().email({
-    message: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
-  }),
   kmPerYear: z.number()
     .min(1000, {
       message: "Mindestens 1.000 km pro Jahr.",
@@ -40,40 +37,30 @@ const formSchema = z.object({
     .max(5000, {
       message: "Maximal 5.000 € für die Installation.",
     }),
+  wallboxInstallationCost: z.number()
+    .min(500, {
+      message: "Mindestens 500 € für die Installation.",
+    })
+    .max(5000, {
+      message: "Maximal 5.000 € für die Installation.",
+    }),
 });
 
 const ROICalculator: React.FC = () => {
   const [results, setResults] = useState<ReturnType<typeof calculateROI> | null>(null);
   const [showResults, setShowResults] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [urgencyTimer, setUrgencyTimer] = useState(300); // 5 minutes in seconds
 
   // Create form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
       kmPerYear: DEFAULT_PARAMS.kmPerYear,
       electricityCost: DEFAULT_PARAMS.electricityCost,
-      wallboxCost: DEFAULT_PARAMS.wallboxCost,
+      wallboxCost: DEFAULT_PARAMS.wallboxCost / 2, // Split the cost in half between device and installation
+      wallboxInstallationCost: DEFAULT_PARAMS.wallboxCost / 2,
     },
   });
-  
-  // Effect for urgency timer
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setUrgencyTimer((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    
-    return () => clearInterval(timer);
-  }, []);
-  
-  // Format the timer
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
@@ -84,10 +71,9 @@ const ROICalculator: React.FC = () => {
       
       // Calculate ROI
       const calculatorInput: CalculatorInput = {
-        email: values.email,
         kmPerYear: values.kmPerYear,
         electricityCost: values.electricityCost,
-        wallboxCost: values.wallboxCost,
+        wallboxCost: values.wallboxCost + values.wallboxInstallationCost, // Add both costs
       };
       
       const calculationResults = calculateROI(calculatorInput);
@@ -121,9 +107,9 @@ const ROICalculator: React.FC = () => {
       <div className="space-y-8">
         {!showResults ? (
           <Card className="glass-card overflow-hidden">
-            <CardHeader className="bg-gradient-to-r from-wallbox/5 to-wallbox/10 border-b">
+            <CardHeader className="bg-gradient-to-r from-goelektrik/5 to-goelektrik/10 border-b">
               <div className="flex items-center mb-2">
-                <div className="bg-wallbox text-white p-1.5 rounded-md mr-3">
+                <div className="bg-goelektrik text-white p-1.5 rounded-md mr-3">
                   <Zap size={20} />
                 </div>
                 <CardTitle className="text-2xl font-medium text-gray-800">
@@ -133,49 +119,11 @@ const ROICalculator: React.FC = () => {
               <CardDescription className="text-gray-600">
                 Berechnen Sie, wie viel Sie mit Ihrer eigenen Wallbox sparen können im Vergleich zum öffentlichen Laden.
               </CardDescription>
-              
-              {urgencyTimer > 0 && (
-                <div className="mt-3 bg-red-50 border border-red-100 rounded-md p-3 text-sm">
-                  <p className="font-medium text-red-800 flex items-center">
-                    <Timer className="inline-block mr-2" size={18} />
-                    Limitiertes Angebot: <span className="ml-1 font-bold">{formatTime(urgencyTimer)}</span>
-                  </p>
-                  <p className="text-red-700 text-xs mt-1">
-                    Sichern Sie sich jetzt Ihren persönlichen Sparplan mit 20% Rabatt auf Ihre Wallbox-Installation!
-                  </p>
-                </div>
-              )}
             </CardHeader>
             
             <CardContent className="pt-6">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  {/* Email field */}
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-gray-700">
-                          E-Mail Adresse
-                        </FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="ihre.email@beispiel.de" 
-                            {...field} 
-                            className="input-transition focus:border-wallbox" 
-                          />
-                        </FormControl>
-                        <FormDescription className="text-xs">
-                          Ihre Ergebnisse werden an diese E-Mail gesendet.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <Separator className="my-4" />
-                  
                   {/* KM per year */}
                   <FormField
                     control={form.control}
@@ -235,6 +183,9 @@ const ROICalculator: React.FC = () => {
                             className="py-4"
                           />
                         </FormControl>
+                        <FormDescription className="text-xs">
+                          Öffentliches Laden kostet durchschnittlich 0,60 €/kWh.
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -249,7 +200,7 @@ const ROICalculator: React.FC = () => {
                         <div className="flex justify-between items-center">
                           <FormLabel className="text-gray-700 flex items-center">
                             <Euro className="mr-2" size={18} />
-                            Kosten der Wallbox-Installation
+                            Kosten der Wallbox
                           </FormLabel>
                           <span className="text-sm font-medium">
                             {field.value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}
@@ -258,7 +209,39 @@ const ROICalculator: React.FC = () => {
                         <FormControl>
                           <Slider
                             defaultValue={[field.value]}
-                            max={5000}
+                            max={3000}
+                            min={500}
+                            step={100}
+                            onValueChange={(vals) => {
+                              field.onChange(vals[0]);
+                            }}
+                            className="py-4"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Wallbox Installation cost */}
+                  <FormField
+                    control={form.control}
+                    name="wallboxInstallationCost"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex justify-between items-center">
+                          <FormLabel className="text-gray-700 flex items-center">
+                            <Wrench className="mr-2" size={18} />
+                            Kosten der Installation
+                          </FormLabel>
+                          <span className="text-sm font-medium">
+                            {field.value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}
+                          </span>
+                        </div>
+                        <FormControl>
+                          <Slider
+                            defaultValue={[field.value]}
+                            max={3000}
                             min={500}
                             step={100}
                             onValueChange={(vals) => {
@@ -275,7 +258,7 @@ const ROICalculator: React.FC = () => {
                   <div className="mt-8">
                     <Button 
                       type="submit" 
-                      className="w-full py-6 bg-wallbox hover:bg-wallbox-dark text-white font-medium shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.01] hover:shadow-xl"
+                      className="w-full py-6 bg-goelektrik hover:bg-goelektrik-dark text-white font-medium shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.01] hover:shadow-xl"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
@@ -287,17 +270,12 @@ const ROICalculator: React.FC = () => {
                         </span>
                       )}
                     </Button>
-                    
-                    <p className="text-xs text-gray-500 mt-3 text-center">
-                      Indem Sie fortfahren, erhalten Sie Ihren persönlichen ROI-Bericht und 
-                      stimmen dem Erhalt weiterer Informationen über Wallbox-Produkte zu.
-                    </p>
                   </div>
                 </form>
               </Form>
             </CardContent>
             
-            <CardFooter className="bg-gradient-to-r from-wallbox/5 to-wallbox/10 border-t py-4">
+            <CardFooter className="bg-gradient-to-r from-goelektrik/5 to-goelektrik/10 border-t py-4">
               <div className="grid grid-cols-3 gap-4 w-full text-center">
                 <div>
                   <p className="text-sm font-medium text-gray-800">500+</p>
@@ -318,10 +296,9 @@ const ROICalculator: React.FC = () => {
           <ROIResults 
             results={results!} 
             userInputs={{
-              email: form.getValues("email"),
               kmPerYear: form.getValues("kmPerYear"),
               electricityCost: form.getValues("electricityCost"),
-              wallboxCost: form.getValues("wallboxCost"),
+              wallboxCost: form.getValues("wallboxCost") + form.getValues("wallboxInstallationCost"),
             }}
             onReset={() => {
               setShowResults(false);
