@@ -1,11 +1,37 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import ROICalculator from '@/components/ROICalculator';
 import { Separator } from '@/components/ui/separator';
 import { Zap, CarFront, BadgeEuro, Clock } from 'lucide-react';
 import Header from '@/components/Header';
 
 const Index = () => {
+  // Track page view on component mount
+  useEffect(() => {
+    // Push to dataLayer for GTM
+    if (window.dataLayer) {
+      window.dataLayer.push({
+        event: 'pageview',
+        page: {
+          title: 'Wallbox Rechner – Lohnt sich eine Wallbox? Jetzt berechnen!',
+          path: window.location.pathname,
+        }
+      });
+    }
+  }, []);
+
+  // Track outbound clicks
+  const trackOutboundClick = (label: string) => {
+    if (window.dataLayer) {
+      window.dataLayer.push({
+        event: 'outbound_click',
+        outbound: {
+          label: label
+        }
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-goelektrik-soft/20">
       <Header />

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -14,7 +13,6 @@ import ROIResults from './ROIResults';
 import { ArrowRight, Zap, CarFront, Euro } from 'lucide-react';
 import { toast } from 'sonner';
 
-// Define the form schema
 const formSchema = z.object({
   kmPerYear: z.number()
     .min(1000, {
@@ -44,7 +42,6 @@ const ROICalculator: React.FC = () => {
   const [showResults, setShowResults] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Create form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,10 +55,19 @@ const ROICalculator: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      // Simulate API delay
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: 'calculator_submit',
+          calculator: {
+            kmPerYear: values.kmPerYear,
+            electricityCost: values.electricityCost,
+            wallboxCost: values.wallboxCost
+          }
+        });
+      }
+      
       await new Promise(resolve => setTimeout(resolve, 800));
       
-      // Calculate ROI
       const calculatorInput: CalculatorInput = {
         kmPerYear: values.kmPerYear,
         electricityCost: values.electricityCost,
@@ -72,12 +78,10 @@ const ROICalculator: React.FC = () => {
       setResults(calculationResults);
       setShowResults(true);
       
-      // Show success toast
       toast.success("Berechnung erfolgreich", {
         description: "Ihre persönliche ROI-Analyse ist jetzt verfügbar."
       });
       
-      // Scroll to results
       setTimeout(() => {
         document.getElementById('results-section')?.scrollIntoView({ 
           behavior: 'smooth',
@@ -89,6 +93,13 @@ const ROICalculator: React.FC = () => {
       toast.error("Fehler bei der Berechnung", {
         description: "Bitte versuchen Sie es erneut."
       });
+      
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: 'calculator_error',
+          error: String(error)
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -105,7 +116,7 @@ const ROICalculator: React.FC = () => {
                   <Zap size={20} />
                 </div>
                 <CardTitle className="text-2xl font-medium text-gray-800">
-                  Wallbox ROI-Rechner
+                  Wallbox Rechner
                 </CardTitle>
               </div>
               <CardDescription className="text-gray-600">
@@ -116,7 +127,6 @@ const ROICalculator: React.FC = () => {
             <CardContent className="pt-6">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  {/* KM per year */}
                   <FormField
                     control={form.control}
                     name="kmPerYear"
@@ -148,7 +158,6 @@ const ROICalculator: React.FC = () => {
                     )}
                   />
                   
-                  {/* Electricity cost */}
                   <FormField
                     control={form.control}
                     name="electricityCost"
@@ -180,7 +189,6 @@ const ROICalculator: React.FC = () => {
                     )}
                   />
                   
-                  {/* Combined Wallbox & Installation cost */}
                   <FormField
                     control={form.control}
                     name="wallboxCost"
@@ -217,6 +225,7 @@ const ROICalculator: React.FC = () => {
                       type="submit" 
                       className="w-full py-6 bg-goelektrik hover:bg-goelektrik-dark text-white font-medium shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.01] hover:shadow-xl"
                       disabled={isSubmitting}
+                      id="calculate-button"
                     >
                       {isSubmitting ? (
                         "Berechne Ihre Ersparnisse..."
@@ -260,6 +269,12 @@ const ROICalculator: React.FC = () => {
             onReset={() => {
               setShowResults(false);
               setResults(null);
+              
+              if (window.dataLayer) {
+                window.dataLayer.push({
+                  event: 'calculator_reset'
+                });
+              }
             }}
           />
         )}
